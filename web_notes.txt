@@ -1,0 +1,136 @@
+Django Website Notes
+
+In Anaconda - activate py35
+OR JUST USE STANDARD CMD
+
+django-admin startproject mysite
+cd into the root where manage.py is to interact
+python manage.py runserver
+
+python manage.py startapp name_of_app
+
+Now go to the settings in the mysite and add the new app: 
+INSTALLED_APPS = [
+    'webapp',
+
+now add to the urls.py
+from django.conf.urls import url, include
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+	url(r'^webapp/', include('webapp.urls')),
+]
+
+Now go into webapp and edit the view:
+# Create your views here.
+from django.http import HttpResponse
+
+def index(request):
+	return HttpResponse("<h2>Hello World</h2>")
+
+Add a urls.py in the webapp directory
+from django.conf.urls import url
+from . import views # . means relative import (import from current package)
+
+#^ start // $ end
+urlpatterns = [
+	url(r'^$', views.index,name='index') #views is the file; index is the finction it will return
+]
+
+
+#######################################
+LECTURE 3
+#######################################
+
+Jinja Templating
+
+python manage.py startapp personal #here we are making another app called personal
+
+#1 install the app in mysite in settings.py
+#2 add the url in urls.py file
+
+NOTE: r'^$' === the index page url
+
+add the urls.py into personal (like in webapp) - copy / paste from mysite urls.py file (NOT THE FILE)
+create a urls.py in personal
+copy what was in the mysite urls file
+delete the from admin ... etc in the urls personal file
+get rid of any url that uses admin then
+SHOULD LOOK LIKE: 
+________
+from django.conf.urls import url, include
+from . import views
+
+urlpatterns = [
+	url(r'^webapp/', include('webapp.urls')),
+	url(r'^$', views.index, name="index"),
+]
+________
+
+now go to views.py and define the index function
+
+MADE THE VIEWS FILE NOW: 
+________
+
+from django.shortcuts import render
+
+# Create your views here.
+
+#need to pass request 
+def index(request): 
+	return render(request, 'personal/home.html') #must pass render, then the location of the HTML template you want to render. WITH JINJA CAN ALSO PASS A DICTIONARY TO THE HTML FILE FULL OF DATA
+________
+
+
+#### NOW NEED TO CREATE A NEW FOLDER CALLED 'templates' as this is where render looks for the templates
+
+################ NOTE ###################
+WHAT DJANGO DOES IS IT TAKES ALL OUR APPS, AND THEN FOR TAMPLATES COMBINES THEM INTO ONE GIANT ONE TEMPLATES DIRECTORY. SO THE TEMPLATES NAME NEEDS TO BE CALLED DIFFERENT NAMES. 
+~~~OR THE PRINCIPAL IS JUST WITHIN THE TEMPLATES DIR MAKE ANOTHER DIR CALLED THE SAME NAME AS THE APP. THEN WE WONT GET MIXED UP WITH NAMES
+
+
+now make a file called header.html and add a boiler plate jinja template
+
+now make home.html
+
+IN HOME WE DEFINE WHAT THE BLOCK CONTENT ETC IS IN THE HEADER
+
+so in home we do the following:
+{% extends "personal/header.html" %}
+
+{% block content %}
+	ENTER HTML HERE
+	WHATEVER IS IN HERE WILL REPLACE THE GAP IN HEADER.HTML
+
+{% endblock %}
+
+________
+
+NOW WE HAVE SEEN THIS, THERE ARE OTHER WAYS AS WHAT IF WE AC WANT MULTIPLE SECTIONS OF CONTENT IN THE HTML PAGE
+
+now we make the htmlsnippit.html in this dir
+
+it is not so restrictive as we dont need the extends logic at the start.
+  
+	
+	
+#######################################
+LECTURE 4 - styling / bootstrap
+#######################################
+
+download bootsrtap: 
+http://getbootstrap.com/getting-started/#download 
+
+each app will likely have its own css etc. 
+## so go into personal and with in here we need to add a new folder called static
+## then extract the css, js and fonts files from bootstrap and paste them there
+
+
+NOW WE HAVE DONE THIS WE GO BACK TO MYSITE, THEN TO SETTINGS. scroll to the very bottom and we want to make sure STATIC_URL = '/static/'
+
+________
+LETS GO BACK TO THE HEADER FILE
+
+##so the header file is whats going to encase all of our other html files for the most part
+##we add to the head in the head: 
+{% load staticfiles %} ##only need to call once
+<link rel='stylesheet' href="{% static 'css/bootstrap.min.css' %}" type="text/css" />
