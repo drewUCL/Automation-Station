@@ -2,7 +2,7 @@
 
 ==================================
 
-*The main purpose here is to develope data visualizations for financial data. The project will develope into a data dashboard allowing the following: *
+*The main purpose here is to develope data visualizations for financial data. The project will develope into a data dashboard allowing the following:*
 
 <ul>
 <li>Data Visualization</li>
