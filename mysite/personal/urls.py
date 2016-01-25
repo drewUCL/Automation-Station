@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
 	url(r'^webapp/', include('webapp.urls')),
 	url(r'^$', views.index, name="index"),
+	url(r'^contact/', views.contact, name='contact'),
 ]
